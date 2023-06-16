@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View } from 'react-native';
 import database from '@react-native-firebase/database';
 import { useEffect, useState } from 'react';
@@ -17,14 +16,12 @@ type Fault = {
 export default function FaultScreen({route}: any) {
   const { sensorId } = route.params;
   const [currentFaults, setCurrentFaults] = useState<Fault[]>([]);
-  console.log(currentFaults);
 
   useEffect(() => {
     const onValueChange = database()
-      .ref(`/sensor-faults/11`)
+      .ref(`/sensor-faults/${sensorId}`)
       .on('value', snapshot => {
-        console.log('new value: ', snapshot.val());
-        const faults = Object.values(snapshot.val()) as Fault[];
+        const faults = Object.values(snapshot.val()).filter(val => val !== null) as Fault[];
         setCurrentFaults(faults);
       });
 
@@ -33,16 +30,16 @@ export default function FaultScreen({route}: any) {
   }, []);
 
   return (
-    <ScrollView className="w-full flex-1">
+    <ScrollView className="w-full flex-1 bg-white-50 p-2">
       {currentFaults.map((fault, index) => (
-        <View className='flex-col border-b px-8'>
+        <View className='flex-col my-2 border border-torea-bay-400 bg-torea-bay-50 p-2 rounded shadow-md' key={index}>
             <View key={index} className="flex-row justify-between items-center">
-                <Text className="text-2xl">Fault ID: {fault.fault_id}</Text>
-                <Text className={`text-2xl ${fault.probability > 0.5 ? 'text-tabasco-500' : 'text-genoa-500'}`}>Probability: {fault.probability}</Text>
+                <Text className="text-xl text-torea-bay-800">Fault ID: {fault.fault_id}</Text>
+                <Text className={`text-md ${fault.probability > 0.5 ? 'text-tabasco-500' : 'text-genoa-500'}`}>Probability: {fault.probability}</Text>
             </View>
-            <Text className="text-xl">Symptoms:</Text>
-            {fault.symptoms.map((symptom, index) => (<View className='flex-row py-8 justify-between items-center'>
-                <Text className="text-m">Sensor: {symptom.sensor_id}</Text>
+            <Text className="text-lg text-torea-bay-800">Symptoms:</Text>
+            {fault.symptoms.map((symptom, index) => (<View className='flex-row my-2 justify-between items-center' key={'Symptoms' + index}>
+                <Text className="text-m text-torea-bay-800">Sensor: {symptom.sensor_id}</Text>
                 <Text className={`text-m ${symptom.probability > 0.2 ? 'text-tabasco-500' : 'text-genoa-500'}`}>Probability: {symptom.probability}</Text>
             </View>))}
         </View>

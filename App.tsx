@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Sensors" component={HomeScreen} />
         <Stack.Screen name="Faults" component={FaultScreen} />
       </Stack.Navigator>
     </NavigationContainer>
